@@ -1,0 +1,34 @@
+name: Vorschlag für SkateProgress
+description: Schlage eine Funktion vor oder melde ein Problem mit der App.
+title: "[Vorschlag] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke für deine Idee! Beschreibe kurz, was du dir wünschst und wie es beim Skaten helfen würde.
+        Das Formular ist öffentlich sichtbar. Bitte keine Passwörter, privaten Daten oder Schlüssel eintragen.
+  - type: dropdown
+    id: art
+    attributes:
+      label: Art
+      options:
+        - Neue Funktion
+        - Verbesserung
+        - Fehler
+    validations:
+      required: true
+  - type: textarea
+    id: beschreibung
+    attributes:
+      label: Beschreibung
+      description: Was soll passieren, oder was funktioniert derzeit nicht?
+      placeholder: Wenn ich eine Session starte, möchte ich …
+    validations:
+      required: true
+  - type: textarea
+    id: beispiel
+    attributes:
+      label: Beispiel oder weitere Details
+      description: Optional – Schritte, Screenshots oder Ideen zur Bedienung.
+    validations:
+      required: false
