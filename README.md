@@ -6,12 +6,12 @@
 
 - **Trickliste:** Kategorien wie Basics, Flatground, Fakie, Nollie, Switch, Grinds & Slides, Transition und Freestyle. Du kannst eigene Tricks hinzufügen, Favoriten markieren, Tricks als „Kann ich“ oder „Übe ich“ einordnen und YouTube-Links hinterlegen.
 - **Sessions:** Wähle bekannte Tricks und Übungstricks aus. Während des Skatens zählt ein Tipp auf **+** jeden gestandenen Trick. Aufwärmtricks lassen sich markieren; per Tipp auf einen Trick erreichst du seine Details und den hinterlegten Videolink.
-- **Fortschritt:** Sieh deine Statistiken und abgeschlossenen Sessions im Verlauf.
-- **S.K.A.T.E.:** Trage Spielernamen ein, wähle das Wort für die Runde und zähle die Buchstaben mit.
+- **Fortschritt:** Sieh deine Trickzahlen und zuletzt gestandenen Tricks im Profil; abgeschlossene Sessions stehen im Verlauf.
+- **Games:** Spiele S.K.A.T.E. mit Spielernamen und frei wählbarem Wort. Beim Trick Roulette bekommst du per Knopfdruck einen zufälligen Trick aus deiner „Kann ich“-Liste.
 - **Wiki:** Suche Skate-Begriffe nach Begriff oder Kategorie und ergänze eigene Einträge.
 - **Profil:** Hinterlege Nickname, vorderen Fuß, Push-Fuß und dein Setup mit Board, Achsen, Kugellagern und Rollen.
 
-Die neue **teilbare Profilkarte** mit Vorschau, Alpha-Hinweis und App-Link ist im Quellcode für Version 0.13.0 vorbereitet. Ob sie schon in deiner APK steckt, erkennst du an der Versionsnummer des [neuesten veröffentlichten Releases](https://github.com/Chaozz2go/SkateProgress-Releases/releases/latest). Die Karte wird erst nach deiner Auswahl über Android geteilt.
+Die **teilbare Profilkarte** zeigt Nickname, Stance, Setup, App-Link und ab Version 0.15.0 deine Fortschrittszahlen. Du siehst vor dem Teilen eine Vorschau und wählst die Ziel-App selbst. Die Startseite hat große Menükacheln; ab 0.15.0 gibt es kein unteres Navigationsmenü mehr.
 
 ## Herunterladen und installieren
 
@@ -28,7 +28,9 @@ Die APK wird außerhalb des Play Store verteilt. Android kann für diese Quelle 
 
 Ab **Version 0.14.0** kannst du unter **Einstellungen → Inhalte teilen** deine komplette Trickliste, das Wiki oder beides als JSON-Datei über Android teilen. Das umfasst auch selbst ergänzte Einträge und hinterlegte YouTube-Links. Du wählst selbst die Ziel-App oder Person. Persönliche Markierungen, Trefferzahlen, Session-Verlauf und Profildaten sind nicht in der Datei enthalten.
 
-Die Datei ist für das Weitergeben von Inhalten gedacht. Ein Import in SkateProgress oder ein vollständiges Backup deiner persönlichen Daten ist derzeit nicht vorhanden.
+Ab **Version 0.15.0** kannst du unter **Einstellungen → Inhalte importieren → Datei auswählen** eine solche JSON-Datei wieder einlesen. Vor dem Übernehmen zeigt die App die Zahl neuer Tricks und Begriffe. Vorhandene Einträge werden übersprungen; dein persönlicher Fortschritt bleibt bestehen. Der Import ergänzt Inhalte und ist kein vollständiges Backup deiner persönlichen Daten.
+
+Ab 0.15.0 erscheint nach einem Update ein Changelog; unter **Einstellungen → Changelog anzeigen** kannst du die Änderungen erneut lesen.
 
 ## Daten und Updates
 
