@@ -24,6 +24,12 @@ Die APK wird außerhalb des Play Store verteilt. Android kann für diese Quelle 
 
 **Debug-Version installiert?** Eine Debug-APK und eine öffentlich signierte Release-APK haben unterschiedliche Signaturen. Android kann sie dann nicht direkt übereinander installieren. Eine Deinstallation löscht die lokal gespeicherten Daten; sichere wichtige Angaben vorher manuell, falls du von einer Debug-Version wechselst.
 
+## Trickliste und Wiki teilen
+
+Ab **Version 0.14.0** kannst du unter **Einstellungen → Inhalte teilen** deine komplette Trickliste, das Wiki oder beides als JSON-Datei über Android teilen. Das umfasst auch selbst ergänzte Einträge und hinterlegte YouTube-Links. Du wählst selbst die Ziel-App oder Person. Persönliche Markierungen, Trefferzahlen, Session-Verlauf und Profildaten sind nicht in der Datei enthalten.
+
+Die Datei ist für das Weitergeben von Inhalten gedacht. Ein Import in SkateProgress oder ein vollständiges Backup deiner persönlichen Daten ist derzeit nicht vorhanden.
+
 ## Daten und Updates
 
 Tricks, Profil, Wiki und Session-Verlauf werden auf deinem Gerät gespeichert. Du brauchst kein Konto. Das Löschen der App kann diese lokalen Daten entfernen. Eine Funktion zum Export persönlicher Backups ist derzeit nicht enthalten.
