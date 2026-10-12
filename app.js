@@ -175,7 +175,7 @@ function seedSelection(s){for(const t of s.tricks)for(const [v,f] of Object.entr
 function sessionOptions(search=''){return record.state.tricks.flatMap(cardsFor).filter(c=>c.name.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>a.name.localeCompare(b.name)).map(({t,direction,name})=>`<option value="${esc(keyFor(t.id,direction))}">${esc(name)}</option>`).join('');}
 function sessionPicker(){const cards=record.state.tricks.flatMap(cardsFor).sort((a,b)=>a.name.localeCompare(b.name));showDialog(`<h2>Trick hinzufügen</h2><form id="picker-form"><label>Trick suchen<input id="session-picker-search" type="search" placeholder="Ollie, Noseslide …"></label><label>Trick<select id="session-card" name="card" required>${sessionOptions()}</select></label><label>Stance<select name="stance">${STANCE_BUTTONS.map(v=>`<option>${v}</option>`).join('')}</select></label><div class="row"><button type="submit" class="primary">Hinzufügen</button>${btn('close','Schließen')}</div></form>`);}
 
-const extras=createExtras({navigate:route=>{location.hash=route;},getState:()=>record.state,mutate,esc,btn,back,showDialog,toast,selectedLabel,getChoices:()=>record.state.tricks.flatMap(cardsFor).flatMap(({t,direction,name})=>STANCE_BUTTONS.map(stance=>({key:keyFor(t.id,`${stance}:${direction}`),name:`${name} · ${stance}`}))),keyFor,app,modal});
+const extras=createExtras({document,navigate:route=>{location.hash=route;},getState:()=>record.state,mutate,esc,btn,back,showDialog,toast,selectedLabel,getChoices:()=>record.state.tricks.flatMap(cardsFor).flatMap(({t,direction,name})=>STANCE_BUTTONS.map(stance=>({key:keyFor(t.id,`${stance}:${direction}`),name:`${name} · ${stance}`}))),keyFor,app,modal});
 document.addEventListener('click',async event=>{
  const button=event.target.closest('[data-action]');if(!button)return;
  const {action,id,variant,field,key,delta,landed}=button.dataset;
@@ -262,13 +262,13 @@ document.addEventListener('submit',async event=>{
  }catch(error){if(formId==='auth-form')$('#auth-error').textContent=error.message;else toast(error.message);}finally{submit.disabled=false;}
 });
 document.addEventListener('input',async event=>{
- extras.input(event.target);
+ if(event.target.id!=='park-photos')extras.input(event.target);
  if(event.target.id==='session-picker-search')$('#session-card').innerHTML=sessionOptions(event.target.value);
  if(event.target.id==='search'){captureTrickPosition();filter.search=event.target.value;$('#trick-list').innerHTML=trickRows();}
  if(event.target.id==='session-note'){try{await mutate(s=>{s.session.note=event.target.value;},false);}catch(error){toast(error.message);}}
 });
 document.addEventListener('change',async event=>{
- if(event.target.id==='stats-trick')extras.input(event.target);
+ if(['stats-trick','park-photos','park-lat','park-lon'].includes(event.target.id))extras.input(event.target);
  if(event.target.id==='profile-frontFoot'||event.target.id==='profile-pushFoot'){const front=$('#profile-frontFoot').value,push=$('#profile-pushFoot').value,info=stanceInfo(front,push);$('#profile-diagram').innerHTML=stanceDiagram(front,push);$('#stance-description').textContent=`${info.stance} · ${info.pushStyle} (noch nicht gespeichert)`;}
  if(event.target.id==='category'){captureTrickPosition();filter.category=event.target.value;$('#trick-list').innerHTML=trickRows();}
  if(event.target.id==='filter'){captureTrickPosition();filter.status=event.target.value;$('#trick-list').innerHTML=trickRows();}
