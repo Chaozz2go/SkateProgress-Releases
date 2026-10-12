@@ -1,3 +1,4 @@
+import {mergeProfile,validateBoards} from './board-profile.js';
 import {parseExtras,mergeExtras} from './extra-state.js';
 export const STANCES=['Regular','Switch','Nollie','Fakie'];
 export const DIRECTIONS=['–','BS','FS'];
@@ -71,6 +72,7 @@ export function readImport(root){
  const history=parsedField(data,'history',[]);assert(Array.isArray(history)&&history.length<=10000,'Ungültiger Verlauf.');
  const profile=parsedField(data,'profile',null);assert(profile===null||(typeof profile==='object'&&!Array.isArray(profile)),'Ungültiges Profil.');
  if(profile){
+  validateBoards(profile);
   assert(typeof (profile.nickname||'')==='string'&&(profile.nickname||'').length<=60,'Nickname zu lang oder ungültig.');
   if(profile.frontFoot===undefined)profile.frontFoot=profile.stance==='Goofy'?'Rechts':'Links';
   if(profile.pushFoot===undefined)profile.pushFoot=profile.frontFoot==='Links'?'Rechts':'Links';
@@ -95,7 +97,7 @@ export function mergeImport(state,imported){
  const remap=k=>{const [id,v]=decodeKey(k);assert(idMap.has(id),'Unbekannter Sessiontrick.');return keyFor(idMap.get(id),v);};
  const remapRecord=r=>({...r,...(r.targets?{targets:Object.fromEntries(Object.entries(r.targets).map(([k,v])=>[remap(k),v]))}:{}),selected:r.selected.map(remap),counts:Object.fromEntries(Object.entries(r.counts).map(([k,v])=>[remap(k),v])),landed:Object.fromEntries(Object.entries(r.landed).map(([k,v])=>[remap(k),v]))});
  for(const r of imported.history)if(!next.history.some(x=>x.id===r.id))next.history.push(remapRecord(r));
- if(imported.profile)next.profile={...next.profile,...imported.profile,setup:{...next.profile.setup,...imported.profile.setup}};
+ if(imported.profile)next.profile=mergeProfile(next.profile,imported.profile);
  if(imported.session&&!next.session.active)next.session=remapRecord(imported.session);
  mergeExtras(next,imported,remap);
  assert(next.tricks.length<=5000&&next.history.length<=10000,'Import würde die Größenlimits überschreiten.');

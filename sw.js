@@ -1,7 +1,7 @@
 const BASE=new URL('./',self.location.href);
 const PREFIX=`skateprogress-shell:${BASE.pathname}:`;
-const CACHE=PREFIX+'v9';
-const SHELL=['./','index.html','style.css','app.js','model.js','skate-ux.js','extras.js','learning-path.js','learning-ui.js','extra-state.js','wiki-data.js','tricks.json','config.json','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png'];
+const CACHE=PREFIX+'v10';
+const SHELL=['./','index.html','style.css','app.js','model.js','board-profile.js','wiki-links.js','skate-ux.js','extras.js','learning-path.js','learning-ui.js','extra-state.js','wiki-data.js','tricks.json','config.json','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','assets/board-parts.svg','assets/ramp-shapes.svg','assets/skateboard-commons.png','assets/quarterpipe-commons.jpg'];
 const URLS=SHELL.map(name=>new URL(name,BASE).href);
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(URLS))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith(PREFIX)&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

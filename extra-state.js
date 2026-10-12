@@ -1,5 +1,6 @@
+import {ensureBoards} from './board-profile.js';
 import {findTask} from './learning-path.js';
-export function ensureExtras(s){s.wiki??=[];s.parks??=[];s.plans??=[];s.game??={word:'SKATE',players:[]};s.quests??=[];s.learning??={counts:{}};s.learning.counts??={};return s;}
+export function ensureExtras(s){if(s.profile)ensureBoards(s.profile);s.wiki??=[];s.parks??=[];s.plans??=[];s.game??={word:'SKATE',players:[]};s.quests??=[];s.learning??={counts:{}};s.learning.counts??={};return s;}
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
 const text=(v,max=160)=>{requireValue(typeof v==='string'&&v.length<=max,'Ungültiger Text im Import.');return v.trim();};
 export function safePhoto(value){return typeof value==='string'&&value.length<=3_000_000&&/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+=*$/.test(value);}
