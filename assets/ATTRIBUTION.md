@@ -5,3 +5,8 @@
 - `board-parts.svg`, `ramp-shapes.svg` and dynamic stance/foot diagrams: original SkateProgress schematics.
 
 External pictures are bundled locally for offline use. Full-size sources and license links also appear below the images in the Wiki.
+
+## Design assets
+
+- `skatepark-hero.webp`: original AI-generated decorative skatepark image for SkateProgress; generated for this project.
+- Fonts embedded in `style.css`: DejaVu Sans Bold, subset for German UI text. Redistributed with the package copyright and license information in `FONTS-LICENSE.txt`.
