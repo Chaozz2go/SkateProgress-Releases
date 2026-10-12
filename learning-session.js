@@ -19,7 +19,7 @@ export function bindLearningTask(state,id){
 export function prepareLearningLevel(state,id){
  const l=LEVELS.find(l=>l.id===id);if(!l||!levelUnlocked(l,state.quests))throw Error('Voraussetzungen fehlen.');
  if(state.session.active)throw Error('Speichere oder beende zuerst deine laufende Session.');
- state.session={active:false,started:0,selected:[],counts:{},landed:{},note:'',targets:{},learningTasks:{}};state.session.learningTaskIds=l.tasks.map(t=>t.id);state.session.learningChecks={};state.session.learningLevel=id;state.session.planName=`Lernpfad · ${l.title}`;
+ state.session={parkId:state.session.parkId||'',parkName:state.session.parkName||'',active:false,started:0,selected:[],counts:{},landed:{},note:'',targets:{},learningTasks:{}};state.session.learningTaskIds=l.tasks.map(t=>t.id);state.session.learningChecks={};state.session.learningLevel=id;state.session.planName=`Lernpfad · ${l.title}`;
  for(const task of l.tasks){if(state.quests.includes(task.id))continue;const ref=taskReference(state,task);if(!ref||state.session.learningTasks[ref.key])continue;
   bindLearningTask(state,task.id);if(taskSessionMode(task))state.session.targets[ref.key]=taskSessionMode(task)==='session'?task.target:Math.max(1,task.target-(state.learning?.counts?.[task.id]||0));
  }

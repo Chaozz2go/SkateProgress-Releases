@@ -1,6 +1,6 @@
 const BASE=new URL('./',self.location.href);
 const PREFIX=`skateprogress-shell:${BASE.pathname}:`;
-const CACHE=PREFIX+'v19';
+const CACHE=PREFIX+'v20';
 const SHELL=['./','index.html','style.css','app.js','model.js','board-profile.js','wiki-links.js','skate-ux.js','extras.js','learning-path.js','learning-session.js','learning-ui.js','extra-state.js','wiki-data.js','tricks.json','config.json','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png','assets/skatepark-hero.webp','assets/board-parts.svg','assets/ramp-shapes.svg','assets/skateboard-commons.png','assets/quarterpipe-commons.jpg'];
 const URLS=SHELL.map(name=>new URL(name,BASE).href);
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(URLS))));
