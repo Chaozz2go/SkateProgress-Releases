@@ -1,4 +1,4 @@
-# SkateProgress Web Demo — Alpha 0.8
+# SkateProgress Web Demo — Alpha 0.9
 
 Installierbare Offline-PWA auf GitHub Pages. Ohne Login; alle persönlichen Daten bleiben im jeweiligen Browser. Eigene Daten werden nicht ins Repository hochgeladen.
 
@@ -13,3 +13,17 @@ Automatische Modell-/Bedienlogik- und API-Prüfungen bestanden. Echte Browser-/H
 ## Bedienung im Skate-Modus
 
 Auf der Startseite **Skate-Modus** wählen. Session, Heute üben, Tricks und Games stehen im Vordergrund; **Alle Bereiche** bringt die normale Startseite zurück. Die Wahl bleibt auf diesem Gerät gespeichert. Im Fokusmodus erscheint ein Trick pro Seite mit Vorheriger/Nächster. Fehlversuch und Gelandet zählen je einen Versuch, Gelandet zusätzlich eine Landung. Die letzten 20 Eingaben lassen sich einzeln rückgängig machen, auch nach erneutem Öffnen einer laufenden Session. Backups übernehmen Zähler; die temporäre Undo-Historie wird beim Import zurückgesetzt. Trickliste behält Suche, geöffnete Kategorien und Scrollposition während der Navigation. Sessions und Trainingspläne bieten eine Suche nach Tricks und wählen die Stance separat.
+
+## Neuer Lernweg
+
+18 Levels mit 72 Challenges und 18 möglichen Abzeichen. Sechs Wege: Grundlagen, No-Pop & Style, Flatground, Transition, Ledges & Slides sowie Switch & Nollie. Eine grafische Levelkarte zeigt offene, abgeschlossene und gesperrte Levels. Gesperrte Levels bleiben als Vorschau lesbar. XP werden aus abgeschlossenen Challenges berechnet und nicht für wiederholte Klicks addiert. Teilziele werden gespeichert und im JSON-Backup mitgeführt. Ältere Android-Lernpfad-Häkchen bleiben erhalten. Bekannte Ziele lassen sich je freigeschaltetem Level selbst bestätigen. Kein Tages-Streak, Zeitlimit, Höhenziel oder Geschwindigkeitsbonus. Fortschritt wird selbst bestätigt, nicht durch Sensoren geprüft.
+
+Der Weg ist ein eigener SkateProgress-Entwurf: Unterrichtsreihenfolge, Wiederholungen und XP sind Orientierung, keine offizielle Kurskopie oder Zertifizierung. Grundlagen richten sich nach Stand, Balance, Pushen, Lenken und Bremsen. Nach sicherem Fahren können Rampen und andere Wege unabhängig von Flips begonnen werden. Erste Coping-Tricks empfehlen geeignete Anleitung. Die Recherchequellen sind auch in der App verlinkt:
+
+- https://skateboardgb.org/beginners/cruiser-award/
+- https://skateboardgb.org/beginners/learn-to-skate-guide/
+- https://www.brailleskateboarding.com/products/level-2-fundamentals
+- https://www.brailleskateboarding.com/products/skateboarding-made-simple-volume-1-digital-download
+- https://skateiq.com/collections/bundles/products/core-90-day-program
+
+29 automatisierte Frontend-/Modell-/Offline-Prüfungen bestehen, inklusive Freischaltung, XP ohne Doppelzählung und Backup von Teilzielen. Ein echter Handytest steht weiterhin aus.

@@ -1,4 +1,5 @@
-export function ensureExtras(s){s.wiki??=[];s.parks??=[];s.plans??=[];s.game??={word:'SKATE',players:[]};s.quests??=[];return s;}
+import {findTask} from './learning-path.js';
+export function ensureExtras(s){s.wiki??=[];s.parks??=[];s.plans??=[];s.game??={word:'SKATE',players:[]};s.quests??=[];s.learning??={counts:{}};s.learning.counts??={};return s;}
 const requireValue=(ok,message)=>{if(!ok)throw Error(message);};
 const text=(v,max=160)=>{requireValue(typeof v==='string'&&v.length<=max,'Ungültiger Text im Import.');return v.trim();};
 export function safePhoto(value){return typeof value==='string'&&value.length<=3_000_000&&/^data:image\/(png|jpeg|webp|gif);base64,[A-Za-z0-9+/]+=*$/.test(value);}
@@ -10,7 +11,9 @@ export function parseExtras(data,root,convertKey,android){
  const plans=array(field(android?'training_plans':'plans',[])).map(p=>{const selected=array(p.selected||p.trickIds||[]).map(convertKey);const targets={};for(const [k,v] of Object.entries(p.targets||{})){requireValue(Number.isInteger(v)&&v>=1&&v<=999,'Ungültiges Trainingsziel.');targets[convertKey(k)]=v;}return {id:text(p.id,200),name:text(p.name),selected:[...new Set(selected)],targets};});
  const game=android?{word:data.skate_word||'SKATE',players:field('skate_players',[])}:field('game',{word:'SKATE',players:[]});requireValue(game&&typeof game==='object','Ungültige Spieldaten.');game.word=text(game.word,20).replace(/[^A-Za-z]/g,'').toUpperCase()||'SKATE';game.players=array(game.players).map(p=>({id:p.id||crypto.randomUUID(),name:text(p.name,60),letters:Math.min(game.word.length,Math.max(0,Number.isInteger(p.letters)?p.letters:0))}));
  const quests=array(field(android?'beginner_quests_v1':'quests',[]));requireValue(quests.every(q=>typeof q==='string'),'Ungültige Lernpfad-Daten.');
- return {wiki,parks,plans,game,quests};
+ const learning=android?{counts:{}}:field('learning',{counts:{}});requireValue(learning&&typeof learning==='object'&&!Array.isArray(learning)&&learning.counts&&typeof learning.counts==='object'&&!Array.isArray(learning.counts),'Ungültiger Lernfortschritt.');
+ const counts={};requireValue(Object.keys(learning.counts).length<=1000,'Zu viele Lernaufgaben.');for(const [id,value] of Object.entries(learning.counts)){requireValue(Number.isInteger(value)&&value>=0&&value<=1000,'Ungültiger Challenge-Zähler.');const found=findTask(id);if(found)counts[id]=Math.min(found.task.target,value);}
+ return {wiki,parks,plans,game,quests,learning:{counts}};
 }
 export function mergeExtras(next,imported,remap){
  ensureExtras(next);const extra=imported.extras;if(!extra)return next;
@@ -18,6 +21,7 @@ export function mergeExtras(next,imported,remap){
  for(const p of extra.parks)if(!next.parks.some(x=>x.id===p.id))next.parks.push(p);
  for(const p of extra.plans)if(!next.plans.some(x=>x.id===p.id))next.plans.push({...p,selected:p.selected.map(remap),targets:Object.fromEntries(Object.entries(p.targets).map(([k,v])=>[remap(k),v]))});
  if(extra.game.players.length&&next.game.players.length===0)next.game=extra.game;
+ for(const [id,count] of Object.entries(extra.learning?.counts||{}))next.learning.counts[id]=Math.max(next.learning.counts[id]||0,count);
  next.quests=[...new Set([...next.quests,...extra.quests])];return next;
 }
 export function changeLetter(game,id,delta){const player=game.players.find(p=>p.id===id);if(player)player.letters=Math.max(0,Math.min(game.word.length,player.letters+delta));}
