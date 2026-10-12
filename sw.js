@@ -1,6 +1,6 @@
 const BASE=new URL('./',self.location.href);
 const PREFIX=`skateprogress-shell:${BASE.pathname}:`;
-const CACHE=PREFIX+'v2';
+const CACHE=PREFIX+'v3';
 const SHELL=['./','index.html','style.css','app.js','model.js','tricks.json','config.json','manifest.webmanifest','icon.svg','icon-192.png','icon-512.png'];
 const URLS=SHELL.map(name=>new URL(name,BASE).href);
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(URLS))));
