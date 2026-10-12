@@ -1,3 +1,4 @@
+import {parseExtras,mergeExtras} from './extra-state.js';
 export const STANCES=['Regular','Switch','Nollie','Fakie'];
 export const DIRECTIONS=['–','BS','FS'];
 export const VARIANTS=STANCES.flatMap(s=>DIRECTIONS.map(d=>`${s}:${d}`));
@@ -62,7 +63,7 @@ export function readImport(root){
   assert(r&&typeof r==='object'&&Number.isFinite(r.started)&&r.started>=0,'Ungültiger Sessionbeginn.');
   const counts=convertCounts(r.counts||{}),selected=[...new Set((r.selected||Object.keys(r.counts||{})).map(convertKey))];
   assert(selected.length<=5000,'Zu viele Sessiontricks.');
-  const out={...r,counts,selected,landed:android?{}:convertCounts(r.landed||{}),note:String(r.note||'').slice(0,2000)};
+  const out={...r,counts,selected,...(r.targets?{targets:convertCounts(r.targets)}:{}),landed:android?{}:convertCounts(r.landed||{}),note:String(r.note||'').slice(0,2000)};
   if(active)out.active=!!r.active;
   else{assert(Number.isFinite(r.ended)&&r.ended>=r.started,'Ungültiges Sessionende.');out.id=r.id||`android-${r.started}-${r.ended}`;}
   return out;
@@ -77,8 +78,8 @@ export function readImport(root){
   assert(profile.setup===undefined||(profile.setup&&typeof profile.setup==='object'&&!Array.isArray(profile.setup)&&Object.values(profile.setup).every(v=>typeof v==='string'&&v.length<=100)),'Ungültiges Board-Setup.');
  }
  const session=parsedField(data,'session',null);
- return {tricks:normalized.tricks,profile,history:history.map(r=>convertRecord(r)),session:session?.active?convertRecord(session,true):null,
-  warning:android?'Parkfotos, Wiki, Spiele und Trainingspläne werden in dieser ersten Web-Version noch nicht übernommen. Android-Zähler bleiben als Versuche erhalten; gelandete Versuche wurden dort nicht getrennt gespeichert.':''};
+ return {extras:parseExtras(data,root,convertKey,android),tricks:normalized.tricks,profile,history:history.map(r=>convertRecord(r)),session:session?.active?convertRecord(session,true):null,
+  warning:android?'Android-Zähler bleiben als Versuche erhalten; Landungen wurden dort nicht getrennt gespeichert. Bestehende Parks, Pläne und Begriffe werden ergänzt, gleichnamige bzw. identische Einträge bleiben erhalten.':''};
 }
 export function mergeImport(state,imported){
  const next=clone(state),idMap=new Map();
@@ -92,10 +93,11 @@ export function mergeImport(state,imported){
   idMap.set(t.id,target.id);
  }
  const remap=k=>{const [id,v]=decodeKey(k);assert(idMap.has(id),'Unbekannter Sessiontrick.');return keyFor(idMap.get(id),v);};
- const remapRecord=r=>({...r,selected:r.selected.map(remap),counts:Object.fromEntries(Object.entries(r.counts).map(([k,v])=>[remap(k),v])),landed:Object.fromEntries(Object.entries(r.landed).map(([k,v])=>[remap(k),v]))});
+ const remapRecord=r=>({...r,...(r.targets?{targets:Object.fromEntries(Object.entries(r.targets).map(([k,v])=>[remap(k),v]))}:{}),selected:r.selected.map(remap),counts:Object.fromEntries(Object.entries(r.counts).map(([k,v])=>[remap(k),v])),landed:Object.fromEntries(Object.entries(r.landed).map(([k,v])=>[remap(k),v]))});
  for(const r of imported.history)if(!next.history.some(x=>x.id===r.id))next.history.push(remapRecord(r));
  if(imported.profile)next.profile={...next.profile,...imported.profile,setup:{...next.profile.setup,...imported.profile.setup}};
  if(imported.session&&!next.session.active)next.session=remapRecord(imported.session);
+ mergeExtras(next,imported,remap);
  assert(next.tricks.length<=5000&&next.history.length<=10000,'Import würde die Größenlimits überschreiten.');
  return next;
 }
