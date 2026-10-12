@@ -63,7 +63,7 @@ export function readImport(root){
   assert(r&&typeof r==='object'&&Number.isFinite(r.started)&&r.started>=0,'Ungültiger Sessionbeginn.');
   const counts=convertCounts(r.counts||{}),selected=[...new Set((r.selected||Object.keys(r.counts||{})).map(convertKey))];
   assert(selected.length<=5000,'Zu viele Sessiontricks.');
-  const out={...r,counts,selected,...(r.targets?{targets:convertCounts(r.targets)}:{}),landed:android?{}:convertCounts(r.landed||{}),note:String(r.note||'').slice(0,2000)};
+  const out={...r,...(r.undo?{undo:[]}:{}),counts,selected,...(r.targets?{targets:convertCounts(r.targets)}:{}),landed:android?{}:convertCounts(r.landed||{}),note:String(r.note||'').slice(0,2000)};
   if(active)out.active=!!r.active;
   else{assert(Number.isFinite(r.ended)&&r.ended>=r.started,'Ungültiges Sessionende.');out.id=r.id||`android-${r.started}-${r.ended}`;}
   return out;

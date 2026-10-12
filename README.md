@@ -1,4 +1,4 @@
-# SkateProgress Web Demo — Alpha 0.7
+# SkateProgress Web Demo — Alpha 0.8
 
 Installierbare Offline-PWA auf GitHub Pages. Ohne Login; alle persönlichen Daten bleiben im jeweiligen Browser. Eigene Daten werden nicht ins Repository hochgeladen.
 
@@ -9,3 +9,7 @@ Unter Einstellungen vollständiges JSON-Backup exportieren/importieren. Android-
 Für Updates alle Appfenster vollständig schließen und neu öffnen. Browser können lokalen Speicher entfernen; wichtige Backups extern sichern. Die Datenbank, Login und geräteübergreifende Synchronisierung gehören zur selbst gehosteten Serverversion.
 
 Automatische Modell-/Bedienlogik- und API-Prüfungen bestanden. Echte Browser-/Handyprüfungen stehen aus. Noch nicht portiert: SkateRunner-Minispiel, Drag-and-drop-Kachelanordnung und Android-spezifische Drive-/APK-Updatefunktionen.
+
+## Bedienung im Skate-Modus
+
+Auf der Startseite **Skate-Modus** wählen. Session, Heute üben, Tricks und Games stehen im Vordergrund; **Alle Bereiche** bringt die normale Startseite zurück. Die Wahl bleibt auf diesem Gerät gespeichert. Im Fokusmodus erscheint ein Trick pro Seite mit Vorheriger/Nächster. Fehlversuch und Gelandet zählen je einen Versuch, Gelandet zusätzlich eine Landung. Die letzten 20 Eingaben lassen sich einzeln rückgängig machen, auch nach erneutem Öffnen einer laufenden Session. Backups übernehmen Zähler; die temporäre Undo-Historie wird beim Import zurückgesetzt. Trickliste behält Suche, geöffnete Kategorien und Scrollposition während der Navigation. Sessions und Trainingspläne bieten eine Suche nach Tricks und wählen die Stance separat.
