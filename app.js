@@ -7,7 +7,7 @@ import {ensureExtras} from './extra-state.js';
 import {STANCES,DIRECTIONS,VARIANTS,clone,keyFor,decodeKey,labelVariant,emptyState,readImport,mergeImport,sessionCount,changeCount,parseName} from './model.js';
 const $=s=>document.querySelector(s),app=$('#app'),modal=$('#modal');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const btn=(action,text,cls='',extra='')=>`<button data-action="${action}" class="${cls}" ${extra}>${text}</button>`;
+const btn=(action,text,cls='',extra='')=>`<button type="button" data-action="${action}" class="${cls}" ${extra}>${text}</button>`;
 const back=()=>`<a class="button back" href="#home">← Startseite</a>`;
 const APP_BASE=new URL('./',import.meta.url);
 const asset=name=>new URL(name,APP_BASE).href;
@@ -240,26 +240,26 @@ document.addEventListener('click',async event=>{
  }catch(error){toast(error.message);}
 });
 document.addEventListener('submit',async event=>{
- event.preventDefault();const form=event.target,values=Object.fromEntries(new FormData(form)),submit=form.querySelector('[type=submit]');submit.disabled=true;
+ event.preventDefault();const form=event.target,formId=form.getAttribute('id'),values=Object.fromEntries(new FormData(form)),submit=form.querySelector('[type=submit]');submit.disabled=true;
  try{
   if(await extras.submit(form,values))return;
-  if(form.id==='auth-form'){
+  if(formId==='auth-form'){
    const result=await api(register?'register':'login','POST',values);user=result.user;csrf=result.csrf;authRequired=false;
    await loadAccount();location.hash='#home';render();await sync();
-  }else if(form.id==='reauth-form'){
+  }else if(formId==='reauth-form'){
    const result=await api('login','POST',{email:user.email,password:values.password});csrf=result.csrf;authRequired=false;modal.close();await sync();
-  }else if(form.id==='profile-form'){
+  }else if(formId==='profile-form'){
    await mutate(s=>{s.profile={...s.profile,nickname:values.nickname.trim(),frontFoot:values.frontFoot,pushFoot:values.pushFoot,setup:s.profile.setup};});toast('Profil gespeichert');
-  }else if(form.id==='board-form'){
+  }else if(formId==='board-form'){
    if(record.state.profile.boards.length>=30&&!values.id)throw Error('Maximal 30 Boards.');const board={id:values.id||crypto.randomUUID(),name:values.name.trim(),setup:Object.fromEntries(BOARD_FIELDS.map(([key])=>[key,values[key]||'']))};if(!board.name)throw Error('Bitte einen Namen eingeben.');await mutate(s=>saveBoard(s.profile,board,!!values.active));modal.close();toast('Board gespeichert');
-  }else if(form.id==='picker-form'){
+  }else if(formId==='picker-form'){
    await mutate(s=>{const [id,direction]=JSON.parse(values.card);const k=keyFor(id,`${values.stance}:${direction}`);if(!s.session.selected.includes(k))s.session.selected.push(k);});modal.close();toast('Trick hinzugefügt');
-  }else if(form.id==='trick-form'){
+  }else if(formId==='trick-form'){
    const name=values.name.trim();if(!name)throw Error('Bitte einen Namen eingeben.');if(record.state.tricks.some(t=>t.name.toLowerCase()===name.toLowerCase()))throw Error('Dieser Trick ist schon vorhanden.');
    if(values.youtube&&!safeVideo(values.youtube))throw Error('Bitte einen HTTPS-Link zu YouTube verwenden.');
    const id=`custom-${crypto.randomUUID()}`;await mutate(s=>{s.tricks.push({id,name,category:values.category,youtube:values.youtube,custom:true,favorite:false,warmup:false,variants:{}});});modal.close();location.hash=`#trick/${encodeURIComponent(id)}`;
-  }else if(form.id==='password-form'){await api('password','POST',values);form.reset();toast('Passwort geändert. Andere Geräte wurden abgemeldet.');}
- }catch(error){if(form.id==='auth-form')$('#auth-error').textContent=error.message;else toast(error.message);}finally{submit.disabled=false;}
+  }else if(formId==='password-form'){await api('password','POST',values);form.reset();toast('Passwort geändert. Andere Geräte wurden abgemeldet.');}
+ }catch(error){if(formId==='auth-form')$('#auth-error').textContent=error.message;else toast(error.message);}finally{submit.disabled=false;}
 });
 document.addEventListener('input',async event=>{
  extras.input(event.target);
