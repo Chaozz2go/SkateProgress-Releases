@@ -35,3 +35,7 @@ Wiki-Erklärungen verlinken andere vorhandene Begriffe und eigene Wiki-Einträge
 Eine bislang weder mit Kann ich noch Übe ich markierte Trickvariante wird beim dritten bestätigten Gelandet-Eintrag in derselben laufenden Session automatisch zu Kann ich. Fehlversuche und andere Varianten werden nicht mitgezählt. Undo des dritten Eintrags entfernt die automatische Markierung, sofern sie nicht inzwischen manuell bearbeitet wurde. Bereits gelernte und vorgemerkte Übe-Tricks werden nicht geändert. Session-Abbruch lässt die Trickmarkierungen bestehen.
 
 38 automatische Frontend-/Modellprüfungen bestehen. Fotos, native Teilfunktion und visuelles Layout weiterhin auf dem Zielgerät testen.
+
+## Community- und XP-Erweiterung
+
+Trick-XP laufen in dieser Demo lokal: maximal 20 belohnte Landungen pro Variante, abgestuft nach Schwierigkeit. Buddys, öffentliche Profile, gemeinsame Inhalte und Admin-Prüfung benötigen die Serverversion mit Login. Die Demo sendet dafür keine API-Anfragen.
