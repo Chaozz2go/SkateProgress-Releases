@@ -10,7 +10,7 @@ export function taskSessionMode(task){return AUTO.has(task.id)?task.id==='ollie_
 export function bindLearningTask(state,id){
  const found=findTask(id);if(!found||!levelUnlocked(found.level,state.quests))throw Error('Voraussetzungen fehlen.');
  const ref=taskReference(state,found.task);if(!ref)return false;
- state.session.learningTasks??={};
+ state.session.learningTaskIds??=[];if(!state.session.learningTaskIds.includes(id))state.session.learningTaskIds.push(id);state.session.learningTasks??={};
  // One landing never completes several different exercises for the same trick.
  state.session.learningTasks[ref.key]=id;
  if(!state.session.selected.includes(ref.key))state.session.selected.push(ref.key);
@@ -19,7 +19,7 @@ export function bindLearningTask(state,id){
 export function prepareLearningLevel(state,id){
  const l=LEVELS.find(l=>l.id===id);if(!l||!levelUnlocked(l,state.quests))throw Error('Voraussetzungen fehlen.');
  if(state.session.active)throw Error('Speichere oder beende zuerst deine laufende Session.');
- state.session={active:false,started:0,selected:[],counts:{},landed:{},note:'',targets:{},learningTasks:{}};state.session.learningLevel=id;state.session.planName=`Lernpfad · ${l.title}`;
+ state.session={active:false,started:0,selected:[],counts:{},landed:{},note:'',targets:{},learningTasks:{}};state.session.learningTaskIds=l.tasks.map(t=>t.id);state.session.learningChecks={};state.session.learningLevel=id;state.session.planName=`Lernpfad · ${l.title}`;
  for(const task of l.tasks){if(state.quests.includes(task.id))continue;const ref=taskReference(state,task);if(!ref||state.session.learningTasks[ref.key])continue;
   bindLearningTask(state,task.id);if(taskSessionMode(task))state.session.targets[ref.key]=taskSessionMode(task)==='session'?task.target:Math.max(1,task.target-(state.learning?.counts?.[task.id]||0));
  }
@@ -28,15 +28,33 @@ export function prepareLearningLevel(state,id){
 export function applySessionLearning(state){
  const session=state.session;if(session.learningApplied)return session.learningResult||{changes:[],xp:0,badges:[]};
  const before=learningSummary(state.quests),questsAtStart=[...state.quests],changes=[];state.learning??={counts:{}};state.learning.counts??={};
- for(const [key,id] of Object.entries(session.learningTasks||{})){
-  if(!session.selected.includes(key))continue;const found=findTask(id);if(!found||!levelUnlocked(found.level,questsAtStart)||state.quests.includes(id))continue;
-  const ref=taskReference(state,found.task),mode=taskSessionMode(found.task);if(!mode||ref?.key!==key)continue;
-  const landings=session.landed?.[key]||0;if(!Number.isInteger(landings)||landings<=0)continue;
-  const previous=Math.min(found.task.target,state.learning.counts[id]||0);
-  const count=Math.min(found.task.target,mode==='session'?Math.max(previous,landings):previous+landings);
-  state.learning.counts[id]=count;if(count>=found.task.target)state.quests.push(id);
-  if(count>previous)changes.push({id,title:found.task.title,count,target:found.task.target,complete:count>=found.task.target,mode});
+ for(const row of sessionLearningRows(state)){
+  const {task,level,key,mode}=row,id=task.id;if(!levelUnlocked(level,questsAtStart)||state.quests.includes(id))continue;
+  const previous=Math.min(task.target,state.learning.counts[id]||0),count=row.count;
+  if(count<=previous)continue;state.learning.counts[id]=count;if(count>=task.target)state.quests.push(id);
+  changes.push({id,title:task.title,count,target:task.target,complete:count>=task.target,mode});
  }
+
  const after=learningSummary(state.quests),result={changes,xp:after.xp-before.xp,badges:after.badges.filter(b=>!before.badges.includes(b))};
  session.learningApplied=true;session.learningResult=result;return result;
+}
+
+export function sessionLearningRows(state){
+ const session=state.session,ids=[...new Set([...(LEVELS.find(l=>l.id===session.learningLevel)?.tasks.map(t=>t.id)||session.learningTaskIds||[]),...Object.values(session.learningTasks||{})])];
+ return ids.map(id=>{
+  const found=findTask(id);if(!found)return null;const {task,level}=found,mode=taskSessionMode(task),ref=taskReference(state,task),key=ref?.key;
+  const prior=mode==='session'?0:Math.min(task.target,state.learning?.counts?.[id]||0),done=state.quests.includes(id);
+  const raw=key&&session.selected.includes(key)&&session.learningTasks?.[key]===id&&mode?session.landed?.[key]||0:0;
+  const landings=Number.isInteger(raw)&&raw>0?raw:0,manual=session.learningChecks?.[id]||{},reps=Number.isInteger(manual.count)&&manual.count>0?manual.count:0;
+  const count=done||manual.complete?task.target:Math.min(task.target,prior+Math.max(landings,reps));
+  return {task,level,key,mode,count,done,confirmed:!!manual.complete,open:levelUnlocked(level,state.quests)};
+ }).filter(Boolean);
+}
+export function checkSessionTask(state,id,action){
+ if(!state.session.active)return false;const row=sessionLearningRows(state).find(r=>r.task.id===id);if(!row||!row.open||row.done)return false;
+ state.session.learningChecks??={};const entry=state.session.learningChecks[id]??={count:0,complete:false};
+ if(action==='toggle')entry.complete=!entry.complete;
+ else if(action==='plus')entry.count=Math.min(row.task.target,(entry.count||0)+1);
+ else if(action==='minus')entry.count=Math.max(0,(entry.count||0)-1);
+ return true;
 }
